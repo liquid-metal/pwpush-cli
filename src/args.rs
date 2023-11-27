@@ -1,10 +1,6 @@
 use clap::{Args, Parser, Subcommand, ValueEnum};
 
-/// This struct contains all data from command line arguments and serves as
-/// entry point for the clap parser configuration at the same time. During
-/// application runtime, fields of this struct will be accessed at various
-/// places to take decisions about functions or behavior based on the user input
-/// from the command line.
+/// Interact with Password Pusher from the command line
 #[derive(Debug, Parser)]
 pub struct PPCArgs {
     /// Password Pusher instance URL. Default is pwpush.com
