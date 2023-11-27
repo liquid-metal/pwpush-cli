@@ -9,6 +9,14 @@ that the current CLI tools are fairly incomplete. This tool will be as well for
 the forseeable future... but maybe some day :)
 
 
+## Usage
+
+```
+$ pwpush-cli --help
+[...]
+```
+
+
 ## Building
 
 It's rust, uses cargo. If you don't know how to use these you will have problems
