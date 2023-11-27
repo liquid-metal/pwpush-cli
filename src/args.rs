@@ -28,6 +28,11 @@ pub struct PPCArgs {
     #[arg(id = "json", long, short, action)]
     pub json_output: bool,
 
+    /// Verbosity of log level. Logs always go to stderr.
+    #[arg(id = "log", long, short, default_value = "warn")]
+    #[clap(value_enum)]
+    pub log_verbosity: LogVerbosity,
+
     /// Top-level action to perform
     #[clap(subcommand)]
     pub action: PPCAction,
@@ -41,6 +46,29 @@ pub enum InstanceProtocol {
 
     // API calls use https://
     Https,
+}
+
+/// Define values that allow the user to specify the preferred log level.
+/// These values correspond to the available options in the log crate, see
+/// <https://docs.rs/log/latest/log/> for details.
+#[derive(Debug, Copy, Clone, ValueEnum)]
+pub enum LogVerbosity {
+    /// Only display fatal messages that the application cannot recover from
+    Error = 0,
+
+    /// Display relevant information about unexpected states and responses
+    Warn = 1,
+
+    /// Print information about general application execution. Log volume is
+    /// is kept low enough to not clutter the output
+    Info = 2,
+
+    /// Display various information about program flow and internal data
+    /// structures
+    Debug = 3,
+
+    /// Flood your shell with garbage
+    Trace = 4,
 }
 
 /// For each PPC object type there is a common set of actions. These subcommands

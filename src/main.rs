@@ -1,5 +1,5 @@
 //! **Yet another CLI for Password Pusher**
-//! 
+//!
 //! Public instance available at <https://pwpush.com>
 //!
 //! ## CLI interface design
@@ -71,11 +71,24 @@
 //!   - `X-User-Email`: email of the account that the token was generated from
 //!   - `X-User-Token`: token out of the accounts token view
 
-
 mod args;
 
 use clap::Parser;
+use log::{debug, error, info, trace, warn};
 
 fn main() {
-    let _args = args::PPCArgs::parse();
+    let args = args::PPCArgs::parse();
+
+    stderrlog::new()
+        .module(module_path!())
+        .timestamp(stderrlog::Timestamp::Second)
+        .verbosity(args.log_verbosity as usize)
+        .init()
+        .unwrap();
+
+    error!("something really bad happened");
+    warn!("a warning");
+    info!("some information about the application");
+    debug!("kill the bugs");
+    trace!("and flood the output");
 }
