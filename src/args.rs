@@ -51,6 +51,7 @@ pub enum InstanceProtocol {
 /// Define values that allow the user to specify the preferred log level.
 /// These values correspond to the available options in the log crate, see
 /// <https://docs.rs/log/latest/log/> for details.
+/// Explicit values are given so it can be passed to stderrlog directly.
 #[derive(Debug, Copy, Clone, ValueEnum)]
 pub enum LogVerbosity {
     /// Only display fatal messages that the application cannot recover from

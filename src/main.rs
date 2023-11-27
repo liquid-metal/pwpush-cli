@@ -73,22 +73,33 @@
 
 mod args;
 
+use args::PPCArgs;
 use clap::Parser;
-use log::{debug, error, info, trace, warn};
+use log::{debug, info};
 
 fn main() {
-    let args = args::PPCArgs::parse();
+    let args = PPCArgs::parse();
 
-    stderrlog::new()
+    initialize_logging(&args);
+
+    info!("starting application");
+}
+
+fn initialize_logging(args: &PPCArgs) {
+    // log output with macros from the log crate are directed to stderr.
+    if let Err(e) = stderrlog::new()
         .module(module_path!())
         .timestamp(stderrlog::Timestamp::Second)
         .verbosity(args.log_verbosity as usize)
         .init()
-        .unwrap();
+    {
+        eprintln!(
+            "error initializing logging backend: {:?}\nOperation will \
+             continue normally, but logging output may not be \
+             available.",
+            e
+        );
+    }
 
-    error!("something really bad happened");
-    warn!("a warning");
-    info!("some information about the application");
-    debug!("kill the bugs");
-    trace!("and flood the output");
+    debug!("logging framework set up");
 }
