@@ -85,8 +85,17 @@ fn build_body_string(ppc_text: &args::PPCText) -> String {
     add_option(&mut args, "passphrase", &ppc_text.passphrase);
     add_option(&mut args, "note", &ppc_text.note);
     add_option(&mut args, "expire_after_days", &ppc_text.expire_after_days);
-    add_option(&mut args, "expire_after_views", &ppc_text.expire_after_views);
-    // TODO: handle deletable and retrieval step options
+    add_option(
+        &mut args,
+        "expire_after_views",
+        &ppc_text.expire_after_views,
+    );
+    add_option(
+        &mut args,
+        "deletable_by_viewer",
+        &ppc_text.deletable_by_viewer,
+    );
+    add_option(&mut args, "retrieval_step", &ppc_text.retrieval_step);
 
     // `join` makes the args into a single string, and we do not have to
     // bother an extra separator at the start or the end of the result.
@@ -220,6 +229,27 @@ mod test {
         let expected = String::from("password[payload]=password&password[passphrase]=passphrase&\
                                              password[note]=this%20is%20a%20note&password[expire_after_days]=5&\
                                              password[expire_after_views]=2");
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn build_body_string_with_all_options() {
+        let text = PPCText {
+            password_payload: String::from("password"),
+            passphrase: Some(String::from("passphrase")),
+            note: Some(String::from("this is a note")),
+            expire_after_days: Some(5),
+            expire_after_views: Some(2),
+            deletable_by_viewer: Some(true),
+            retrieval_step: Some(false),
+        };
+
+        let actual = build_body_string(&text);
+        let expected = String::from("password[payload]=password&password[passphrase]=passphrase&\
+                                             password[note]=this%20is%20a%20note&password[expire_after_days]=5&\
+                                             password[expire_after_views]=2&password[deletable_by_viewer]=true&\
+                                             password[retrieval_step]=false");
 
         assert_eq!(actual, expected);
     }

@@ -86,36 +86,12 @@ pub struct PPCText {
     pub expire_after_views: Option<usize>,
 
     /// Allow users to delete passwords once retrieved
-    #[clap(flatten)]
-    pub deletable_by_viewer: Option<DeletableByViewerGroup>,
+    #[arg(id = "deletable-by-viewer", long)]
+    pub deletable_by_viewer: Option<bool>,
 
     /// Helps to avoid chat systems and URL scanners from eating up views
-    #[clap(flatten)]
-    pub retrieval_step: Option<RetrievalStepGroup>,
-}
-
-#[derive(Debug, Args)]
-#[group(required = false, multiple = false)]
-pub struct DeletableByViewerGroup {
-    /// Mutually exclusive with --not-deletable-by-viewer. If not given, instance default is used
-    #[arg(id = "is-deletable-by-viewer", long, action = ArgAction::SetTrue)]
-    pub is_deletable_by_viewer: bool,
-
-    /// Mutually exclusive with --deletable-by-viewer. If not given, instance default is used
-    #[arg(id = "not-deletable-by-viewer", long, action = ArgAction::SetFalse)]
-    pub not_deletable_by_viewer: bool,
-}
-
-#[derive(Debug, Args)]
-#[group(required = false, multiple = false)]
-pub struct RetrievalStepGroup {
-    /// Mutually exclusive with --without-retrieval-step. If not given, instance default is used
-    #[arg(id = "with-retrieval-step", long, action = ArgAction::SetTrue)]
-    pub with_retrieval_step: bool,
-
-    /// Mutually exclusive with --with-retrieval-step. If not given, instance default is used
-    #[arg(id = "without-retrieval-step", long, action = ArgAction::SetFalse)]
-    pub without_retrieval_step: bool,
+    #[arg(id = "retrieval-step", long)]
+    pub retrieval_step: Option<bool>,
 }
 
 #[derive(Debug, Args)]
