@@ -1,16 +1,22 @@
 use std::fmt::Display;
 
-pub struct PPCError<'a> {
-    message: &'a str,
+pub struct PPCError {
+    message: String,
 }
 
-impl<'a> PPCError<'a> {
-    pub fn new(message: &'a str) -> Self {
-        Self { message }
+impl From<String> for PPCError {
+    fn from(value: String) -> Self {
+        Self { message: value }
     }
 }
 
-impl<'a> Display for PPCError<'a> {
+impl From<&str> for PPCError {
+    fn from(value: &str) -> Self {
+        Self { message: String::from(value) }
+    }
+}
+
+impl Display for PPCError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Error: {}", self.message)
     }

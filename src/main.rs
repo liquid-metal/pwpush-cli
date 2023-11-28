@@ -100,7 +100,7 @@ fn main() {
 fn run(args: &PPCArgs) -> Result<(), PPCError> {
     match &args.action {
         PPCAction::Push(push_command) => match push_command {
-            PPCObject::Text(ppc_text) => pwpush_api::push_text(ppc_text),
+            PPCObject::Text(ppc_text) => pwpush_api::push_text(args, ppc_text),
             PPCObject::File(_) => todo!(),
             PPCObject::URL(_) => todo!(),
         },

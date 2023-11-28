@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use clap::{ArgAction, Args, Parser, Subcommand, ValueEnum};
 
 /// Interact with Password Pusher from the command line
@@ -13,11 +15,11 @@ pub struct PPCArgs {
     pub instance_protocol: InstanceProtocol,
 
     /// Email for authenticated requests (goes into X-User-Email header)
-    #[arg(id = "email", long, short)]
+    #[arg(id = "email", long, short, requires = "token")]
     pub email: Option<String>,
 
     /// Token for authenticated requests (goes into X-User-Token header)
-    #[arg(id = "token", long, short)]
+    #[arg(id = "token", long, short, requires = "email")]
     pub token: Option<String>,
 
     /// Command output in json. If omitted, human-readable output is produced
@@ -130,6 +132,15 @@ pub enum InstanceProtocol {
 
     /// API calls use https://
     Https,
+}
+
+impl Display for InstanceProtocol {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            InstanceProtocol::Http => write!(f, "http"),
+            InstanceProtocol::Https => write!(f, "https"),
+        }
+    }
 }
 
 /// Define values that allow the user to specify the preferred log level.
