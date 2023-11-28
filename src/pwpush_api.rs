@@ -117,7 +117,7 @@ fn add_option<T: fmt::Display>(args: &mut Vec<String>, key: &str, data: &Option<
         let formatted = format!(
             "password[{}]={}",
             key,
-            &urlencoding::encode(d.as_str()).into_owned()
+            &urlencoding::encode(d.as_str())
         );
         debug!("appending `{}` request parameters", formatted);
         args.push(formatted);
