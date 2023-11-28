@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{ArgAction, Args, Parser, Subcommand, ValueEnum};
 
 /// Interact with Password Pusher from the command line
 #[derive(Debug, Parser)]
@@ -21,7 +21,7 @@ pub struct PPCArgs {
     pub token: Option<String>,
 
     /// Command output in json. If omitted, human-readable output is produced
-    #[arg(id = "json", long, short, action)]
+    #[arg(id = "json", long, short, action = ArgAction::SetTrue)]
     pub json_output: bool,
 
     /// Verbosity of log level. Logs always go to stderr.
@@ -47,15 +47,74 @@ pub enum PPCAction {
     Expire(PPCObject),
 }
 
+/// Sepcify the object to operate on. These options resemble the three very
+/// similar parts of the API.
 #[derive(Debug, Subcommand)]
 pub enum PPCObject {
+    /// Work on text-based secrets (typically passwords)
     Text(PPCText),
+
+    /// Work on files
     File(PPCFile),
+
+    /// Work on URLs
     URL(PPCURL),
 }
 
 #[derive(Debug, Args)]
-pub struct PPCText {}
+pub struct PPCText {
+    /// The URL encoded password or secret text to share
+    #[arg(id = "password")]
+    pub password_payload: String,
+
+    /// Require recipients to enter this passphrase to view the created push
+    #[arg(id = "passphrase", long)]
+    pub passphrase: Option<String>,
+
+    /// If authenticated, the URL encoded note for this push. Visible only to the push creator
+    #[arg(id = "note", long)]
+    pub note: Option<String>,
+
+    /// Expire secret link and delete after this many days
+    #[arg(id = "expire-after-days", long)]
+    pub expire_after_days: Option<usize>,
+
+    /// Expire secret link and delete after this many views
+    #[arg(id = "expire-after-views", long)]
+    pub expire_after_views: Option<usize>,
+
+    /// Allow users to delete passwords once retrieved
+    #[clap(flatten)]
+    pub deletable_by_viewer: Option<DeletableByViewerGroup>,
+
+    /// Helps to avoid chat systems and URL scanners from eating up views
+    #[clap(flatten)]
+    pub retrieval_step: Option<RetrievalStepGroup>,
+}
+
+#[derive(Debug, Args)]
+#[group(required = false, multiple = false)]
+pub struct DeletableByViewerGroup {
+    /// Mutually exclusive with --not-deletable-by-viewer. If not given, instance default is used
+    #[arg(id = "is-deletable-by-viewer", long, action = ArgAction::SetTrue)]
+    pub is_deletable_by_viewer: bool,
+
+    /// Mutually exclusive with --deletable-by-viewer. If not given, instance default is used
+    #[arg(id = "not-deletable-by-viewer", long, action = ArgAction::SetFalse)]
+    pub not_deletable_by_viewer: bool,
+}
+
+#[derive(Debug, Args)]
+#[group(required = false, multiple = false)]
+pub struct RetrievalStepGroup {
+    /// Mutually exclusive with --without-retrieval-step. If not given, instance default is used
+    #[arg(id = "with-retrieval-step", long, action = ArgAction::SetTrue)]
+    pub with_retrieval_step: bool,
+
+    /// Mutually exclusive with --with-retrieval-step. If not given, instance default is used
+    #[arg(id = "without-retrieval-step", long, action = ArgAction::SetFalse)]
+    pub without_retrieval_step: bool,
+}
 
 #[derive(Debug, Args)]
 pub struct PPCFile {}
