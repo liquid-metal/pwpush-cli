@@ -34,13 +34,42 @@ pub struct PPCArgs {
     pub action: PPCAction,
 }
 
+/// For each PPC object type there is a common set of actions. These subcommands
+/// allow a very human-friendly interface for the CLI.
+#[derive(Debug, Subcommand)]
+pub enum PPCAction {
+    /// Publish a new secret.
+    #[clap(subcommand)]
+    Push(PPCObject),
+
+    /// Expire an existing secret.
+    #[clap(subcommand)]
+    Expire(PPCObject),
+}
+
+#[derive(Debug, Subcommand)]
+pub enum PPCObject {
+    Text(PPCText),
+    File(PPCFile),
+    URL(PPCURL),
+}
+
+#[derive(Debug, Args)]
+pub struct PPCText {}
+
+#[derive(Debug, Args)]
+pub struct PPCFile {}
+
+#[derive(Debug, Args)]
+pub struct PPCURL {}
+
 /// Limit available instance protocols to a valid protocol.
 #[derive(Debug, Copy, Clone, ValueEnum)]
 pub enum InstanceProtocol {
     /// API calls use http://
     Http,
 
-    // API calls use https://
+    /// API calls use https://
     Https,
 }
 
@@ -67,36 +96,3 @@ pub enum LogVerbosity {
     /// Flood your shell with garbage
     Trace = 4,
 }
-
-/// For each PPC object type there is a common set of actions. These subcommands
-/// allow a very human-friendly interface for the CLI.
-#[derive(Debug, Subcommand)]
-pub enum PPCAction {
-    /// Publish a new secret.
-    Push(PushCommand),
-
-    /// Expire an existing secret.
-    Expire(ExpireCommand),
-}
-
-#[derive(Debug, Args)]
-pub struct PushCommand;
-
-#[derive(Debug, Args)]
-pub struct ExpireCommand;
-
-#[derive(Debug, Subcommand)]
-pub enum PPCObject {
-    Text(PPCText),
-    File(PPCFile),
-    URL(PPCURL),
-}
-
-#[derive(Debug, Args)]
-pub struct PPCText {}
-
-#[derive(Debug, Args)]
-pub struct PPCFile {}
-
-#[derive(Debug, Args)]
-pub struct PPCURL {}

@@ -72,10 +72,14 @@
 //!   - `X-User-Token`: token out of the accounts token view
 
 mod args;
+mod errors;
+mod pwpush_api;
 
-use args::PPCArgs;
 use clap::Parser;
-use log::{debug, info};
+use errors::PPCError;
+use log::{debug, error, info};
+
+use crate::args::*;
 
 fn main() {
     let args = PPCArgs::parse();
@@ -83,6 +87,25 @@ fn main() {
     initialize_logging(&args);
 
     info!("starting application");
+
+    let res = run(&args);
+
+    if let Err(e) = res {
+        error!("task could not complete sucessfully: {}", e);
+    } else {
+        info!("application terminated normally");
+    }
+}
+
+fn run(args: &PPCArgs) -> Result<(), PPCError> {
+    match &args.action {
+        PPCAction::Push(push_command) => match push_command {
+            PPCObject::Text(ppc_text) => pwpush_api::push_text(ppc_text),
+            PPCObject::File(_) => todo!(),
+            PPCObject::URL(_) => todo!(),
+        },
+        args::PPCAction::Expire(_) => todo!(),
+    }
 }
 
 fn initialize_logging(args: &PPCArgs) {
@@ -99,6 +122,7 @@ fn initialize_logging(args: &PPCArgs) {
              available.",
             e
         );
+        return;
     }
 
     debug!("logging framework set up");
