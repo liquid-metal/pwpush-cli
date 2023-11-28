@@ -8,3 +8,4 @@ clap = { version = "4.4.9", features = ["derive"] }
 log = "0.4.20"
 reqwest = { version = "0.11.22", features = ["blocking"] }
 stderrlog = { version = "0.5.4", features = ["timestamps"] }
+urlencoding = "2.1.3"

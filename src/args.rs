@@ -162,7 +162,4 @@ pub enum LogVerbosity {
     /// Display various information about program flow and internal data
     /// structures
     Debug = 3,
-
-    /// Flood your shell with garbage
-    Trace = 4,
 }

@@ -18,6 +18,6 @@ impl From<&str> for PPCError {
 
 impl Display for PPCError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Error: {}", self.message)
+        write!(f, "{}", self.message)
     }
 }
